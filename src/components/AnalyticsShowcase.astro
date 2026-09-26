@@ -1,0 +1,71 @@
+---
+import { overviewStats } from '../data/analytics';
+
+const icons: Record<string, string> = {
+  eye: '◉', book: '▤', clap: '✦', ratio: '%', people: '◎', mail: '✉', pen: '✎', screen: '▣',
+};
+---
+
+<section class="analytics-showcase" aria-labelledby="analytics-title">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">A closer look</p>
+      <h2 id="analytics-title">The work, in numbers.</h2>
+    </div>
+    <p class="section-note">A living snapshot of readership across Medium.</p>
+  </div>
+  <div class="stats-grid">
+    {overviewStats.map((stat, index) => (
+      <article class="stat-card" style={`--delay: ${index * 55}ms`}>
+        <div class="stat-topline"><span class="stat-icon" aria-hidden="true">{icons[stat.icon]}</span><span class="trend">{stat.trend}</span></div>
+        <strong class="stat-value" data-count={stat.value} data-display={stat.display}>0</strong>
+        <span class="stat-label">{stat.label}</span>
+      </article>
+    ))}
+  </div>
+  <a class="analytics-link" href="/analytics/">View detailed analytics <span aria-hidden="true">↗</span></a>
+</section>
+
+<script>
+  const formatNumber = (value: number, display: string) => display.includes('%') ? `${value.toFixed(1)}%` : display.includes('k') ? `${(value / 1000).toFixed(display.startsWith('2.') ? 2 : 1)}k` : Math.round(value).toLocaleString();
+  const counters = document.querySelectorAll<HTMLElement>('[data-count]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const element = entry.target as HTMLElement;
+      const target = Number(element.dataset.count);
+      const display = element.dataset.display || '';
+      const start = performance.now();
+      const tick = (now: number) => {
+        const progress = Math.min((now - start) / 900, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        element.textContent = formatNumber(target * eased, display);
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      observer.unobserve(element);
+    });
+  }, { threshold: 0.25 });
+  counters.forEach((counter) => observer.observe(counter));
+</script>
+
+<style>
+  .analytics-showcase { padding: 0 0 126px; }
+  .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 32px; margin-bottom: 28px; }
+  .eyebrow { margin: 0 0 16px; color: #70736d; font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  h2 { margin: 0; font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(2.2rem, 4vw, 3.7rem); font-weight: 400; line-height: 1; }
+  .section-note { max-width: 220px; margin: 0; color: #70736d; font-size: 0.86rem; line-height: 1.5; text-align: right; }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .stat-card { min-height: 168px; padding: 20px; border: 1px solid #d1d3cc; border-radius: 14px; background: rgba(255, 255, 255, 0.34); box-shadow: 0 12px 28px rgba(32, 35, 31, 0.04); transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; animation: rise 650ms both; animation-delay: var(--delay); }
+  .stat-card:hover { border-color: #52705d; box-shadow: 0 18px 36px rgba(32, 35, 31, 0.09); transform: translateY(-5px); }
+  .stat-topline { display: flex; justify-content: space-between; align-items: center; }
+  .stat-icon { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: #e5ebe4; color: #52705d; font-size: 0.85rem; }
+  .trend { color: #52705d; font-size: 0.68rem; letter-spacing: 0.02em; }
+  .stat-value { display: block; margin-top: 25px; font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(2rem, 3vw, 2.7rem); font-weight: 400; letter-spacing: 0; line-height: 1; }
+  .stat-label { display: block; margin-top: 9px; color: #70736d; font-size: 0.76rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .analytics-link { display: inline-flex; gap: 8px; align-items: center; margin-top: 28px; color: #20231f; font-size: 0.85rem; font-weight: 700; text-decoration: none; border-bottom: 1px solid #20231f; padding-bottom: 4px; transition: color 180ms ease, gap 180ms ease; }
+  .analytics-link:hover { color: #52705d; gap: 12px; }
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 850px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .analytics-showcase { padding-bottom: 88px; } .section-heading { display: block; } .section-note { margin-top: 14px; text-align: left; } .stats-grid { grid-template-columns: 1fr; } }
+</style>

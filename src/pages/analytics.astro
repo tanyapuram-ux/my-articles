@@ -1,0 +1,63 @@
+---
+import { overviewStats, monthlyData, articles } from '../data/analytics';
+
+const chartPoints = (values: readonly number[]) => values.map((value, index) => `${(index / (values.length - 1)) * 100},${100 - (value / Math.max(...values)) * 82 - 8}`).join(' ');
+const chartMax = (values: readonly number[]) => `${Math.max(...values) / 1000}k`;
+const icon = (name: string) => ({ eye: '◉', book: '▤', clap: '✦', people: '◎' })[name] || '•';
+const overview = overviewStats.slice(0, 3).concat(overviewStats.slice(4, 5));
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width" />
+    <meta name="description" content="A detailed view of Medium readership and content performance." />
+    <title>Analytics | My Articles</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav-group nav-left" aria-label="Primary navigation">
+        <a class="site-name" href="/">Home</a><a href="/analytics/">Analytics</a><a href="/featured/">Featured In</a><a href="https://medium.com/@tanya.puram" target="_blank" rel="noopener noreferrer">Medium Blog</a>
+      </nav>
+      <nav class="nav-group nav-right" aria-label="Secondary navigation">
+        <a href="/articles/entrepreneurship/">Entrepreneurship &amp; Business</a><a href="/articles/founder-interviews/">Founder Interviews</a><a href="/articles/tech-ai/">Tech &amp; AI</a>
+      </nav>
+    </header>
+
+    <main>
+      <a class="return-link" href="/">← Back home</a>
+      <section class="analytics-hero"><p class="eyebrow">The readership report / 2026</p><h1>Medium Performance<br /><em>Analytics.</em></h1><p class="hero-copy">A considered view of how ideas travel: the people who find them, stay with them, and carry them forward.</p></section>
+
+      <section class="overview-section" aria-labelledby="overview-title"><div class="section-heading"><div><h2 id="overview-title">Overview</h2></div><span class="period">Last 12 months&nbsp; ↗</span></div><div class="overview-grid">{overview.map((stat) => <article class="overview-card"><span class="stat-icon">{icon(stat.icon)}</span><strong class="count" data-count={stat.value} data-display={stat.display}>0</strong><span class="stat-label">{stat.label}</span><span class="trend">{stat.trend}</span></article>)}</div></section>
+
+      <section class="charts-section" aria-labelledby="growth-title"><div class="section-heading"><div><h2 id="growth-title">Growth over time</h2></div><span class="period">Monthly performance</span></div><div class="chart-grid">
+        {([['Views', monthlyData.views, '#52705d'], ['Reads', monthlyData.reads, '#b27658'], ['Claps', monthlyData.claps, '#7c8a61']] as const).map(([label, values, color]) => <article class="chart-card"><div class="chart-heading"><h3>{label}</h3><span>{chartMax(values)}</span></div><div class="chart"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label={`Monthly ${label}`} role="img"><polyline points={`0,92 100,92`} class="axis" /><polyline points={chartPoints(values)} fill="none" stroke={color} stroke-width="1.5" vector-effect="non-scaling-stroke" /></svg><div class="chart-labels">{monthlyData.labels.map((month) => <span>{month}</span>)}</div></div></article>)}
+      </div></section>
+
+      <section class="audience-section" aria-labelledby="audience-title"><div class="section-heading"><div><h2 id="audience-title">Audience signals</h2></div></div><div class="audience-grid"><article><span class="audience-number">42.1%</span><h3>Read ratio</h3><p>Readers who stayed with a story beyond the first few lines.</p></article><article><span class="audience-number">+11.6%</span><h3>Subscriber growth</h3><p>A growing circle choosing to receive the next idea directly.</p></article><article><span class="audience-number">+14.1%</span><h3>Followers gained</h3><p>New readers joining the longer conversation.</p></article></div></section>
+
+      <section class="table-section" aria-labelledby="content-title"><div class="section-heading"><div><p class="eyebrow">Story by story</p><h2 id="content-title">Content performance</h2></div></div><div class="table-wrap"><table><thead><tr><th>Article</th><th>Views</th><th>Reads</th><th>Read ratio</th><th>Claps</th></tr></thead><tbody>{articles.map((article) => <tr><th scope="row">{article.title}</th><td>{article.views}</td><td>{article.reads}</td><td>{article.ratio}</td><td>{article.claps}</td></tr>)}</tbody></table></div></section>
+
+      <section class="top-section" aria-labelledby="top-title"><div class="section-heading"><div><p class="eyebrow">Worth returning to</p><h2 id="top-title">Top performing articles</h2></div></div><div class="top-grid">{articles.slice(0, 3).map((article, index) => <a class="top-card" href={article.title.includes('From Solo Vision') ? '/articles/entrepreneurship/' : '/articles/founder-interviews/'}><span class="top-index">0{index + 1}</span><h3>{article.title}</h3><span class="read-link">Read story ↗</span><div class="top-meta"><span>{article.views} views</span><span>{article.ratio} read ratio</span></div></a>)}</div></section>
+    </main>
+    <footer><span>My Articles</span><span>© {new Date().getFullYear()}</span></footer>
+  </body>
+</html>
+
+<script>
+  const format = (value: number, display: string) => display.includes('%') ? `${value.toFixed(1)}%` : display.includes('k') ? `${(value / 1000).toFixed(display.startsWith('2.') ? 2 : 1)}k` : Math.round(value).toLocaleString();
+  const observer = new IntersectionObserver((entries) => entries.forEach((entry) => { if (!entry.isIntersecting) return; const el = entry.target as HTMLElement; const target = Number(el.dataset.count); const display = el.dataset.display || ''; const start = performance.now(); const tick = (now: number) => { const progress = Math.min((now - start) / 850, 1); el.textContent = format(target * (1 - Math.pow(1 - progress, 3)), display); if (progress < 1) requestAnimationFrame(tick); }; requestAnimationFrame(tick); observer.unobserve(el); }), { threshold: 0.2 });
+  document.querySelectorAll<HTMLElement>('.count').forEach((el) => observer.observe(el));
+</script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap');
+  :global(*) { box-sizing: border-box; } :global(body) { margin: 0; background: #f5f3ef; color: #20231f; font-family: 'DM Sans', sans-serif; }
+  .site-header, main, footer { width: min(1120px, calc(100% - 64px)); margin-inline: auto; } .site-header { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 28px 0; border-bottom: 1px solid #d9d8d2; } .nav-group { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; } .nav-right { justify-content: flex-end; } .site-name, nav a, .return-link { color: inherit; text-decoration: none; } nav a, .eyebrow, .period { color: #70736d; font-size: 0.74rem; letter-spacing: 0.04em; } nav a:hover, .return-link:hover { color: #52705d; } .site-name { font-size: 1rem; font-weight: 700; }
+  main { padding: 54px 0 120px; } .return-link { display: inline-block; margin-bottom: 94px; font-size: 0.85rem; font-weight: 700; } .eyebrow { margin: 0 0 16px; text-transform: uppercase; } h1, h2, h3, p { margin-top: 0; } h1 { margin-bottom: 28px; font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(3.5rem, 8vw, 7rem); font-weight: 400; line-height: 0.93; } h1 em { color: #52705d; } .hero-copy { max-width: 460px; color: #5f625d; font-size: 1.05rem; line-height: 1.7; } .analytics-hero { padding-bottom: 105px; } .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 28px; } h2 { margin: 0; font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(2.3rem, 4vw, 3.7rem); font-weight: 400; line-height: 1; } .period { white-space: nowrap; }
+  .overview-section, .charts-section, .audience-section, .table-section { padding: 0 0 100px; } .overview-grid, .chart-grid, .audience-grid, .top-grid { display: grid; gap: 12px; } .overview-grid { grid-template-columns: repeat(4, 1fr); } .overview-card, .chart-card { position: relative; padding: 22px; border: 1px solid #d1d3cc; border-radius: 14px; background: rgba(255,255,255,.34); box-shadow: 0 12px 28px rgba(32,35,31,.04); } .stat-icon { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: #e5ebe4; color: #52705d; } .count { display: block; margin-top: 25px; font-family: 'DM Serif Display', Georgia, serif; font-size: 2.6rem; font-weight: 400; } .stat-label { display: block; color: #70736d; font-size: .73rem; letter-spacing: .04em; text-transform: uppercase; } .trend { display: block; margin-top: 15px; color: #52705d; font-size: .7rem; }
+  .chart-grid { grid-template-columns: repeat(3, 1fr); } .chart-heading { display: flex; justify-content: space-between; align-items: baseline; } .chart-heading h3 { margin: 0; font-family: 'DM Serif Display', Georgia, serif; font-size: 1.7rem; font-weight: 400; } .chart-heading span { color: #52705d; font-size: .75rem; } .chart { height: 170px; margin-top: 22px; } svg { width: 100%; height: 135px; overflow: visible; } .axis { stroke: #d1d3cc; stroke-width: .7; } .chart-labels { display: flex; justify-content: space-between; color: #92958e; font-size: .63rem; }
+  .audience-grid { grid-template-columns: repeat(3, 1fr); border-top: 1px solid #bfc2b9; } .audience-grid article { padding: 28px 24px 0 0; border-bottom: 1px solid #bfc2b9; } .audience-number { color: #52705d; font-family: 'DM Serif Display', Georgia, serif; font-size: 2.8rem; } .audience-grid h3 { margin: 18px 0 8px; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; } .audience-grid p { max-width: 240px; margin: 0 0 28px; color: #70736d; font-size: .88rem; line-height: 1.55; }
+  .table-wrap { overflow-x: auto; border-top: 1px solid #bfc2b9; } table { width: 100%; min-width: 680px; border-collapse: collapse; font-size: .82rem; } th, td { padding: 18px 12px; border-bottom: 1px solid #d1d3cc; text-align: right; } th:first-child, td:first-child { width: 48%; padding-left: 0; text-align: left; } tbody th { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.1rem; font-weight: 400; } thead th { color: #70736d; font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; }
+  .top-grid { grid-template-columns: 1.4fr 1fr 1fr; } .top-card { display: flex; min-height: 270px; flex-direction: column; padding: 24px; border-radius: 14px; background: #20231f; color: #f5f3ef; text-decoration: none; transition: transform 180ms ease, background 180ms ease; } .top-card:hover { background: #52705d; transform: translateY(-5px); } .top-index { color: #b7c9b5; font-size: .7rem; letter-spacing: .08em; } .top-card h3 { max-width: 250px; margin: auto 0 20px; font-family: 'DM Serif Display', Georgia, serif; font-size: 1.75rem; font-weight: 400; line-height: 1.05; } .read-link { font-size: .75rem; } .top-meta { display: flex; justify-content: space-between; margin-top: 32px; color: #b7c9b5; font-size: .68rem; } footer { display: flex; justify-content: space-between; padding: 28px 0 42px; color: #70736d; font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; }
+  @media (max-width: 850px) { .overview-grid { grid-template-columns: repeat(2, 1fr); } .chart-grid { grid-template-columns: 1fr; } } @media (max-width: 700px) { .site-header, main, footer { width: min(100% - 40px, 560px); } .site-header { flex-direction: column; align-items: flex-start; } .nav-group { gap: 12px; } .nav-right { justify-content: flex-start; } main { padding-top: 34px; } .return-link { margin-bottom: 70px; } .analytics-hero { padding-bottom: 78px; } .section-heading { display: block; } .period { display: inline-block; margin-top: 14px; } .audience-grid, .top-grid { grid-template-columns: 1fr; } .top-card { min-height: 220px; } }
+</style>

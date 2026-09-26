@@ -1,0 +1,68 @@
+---
+import { featuredPublications, featuredStats } from '../data/featured';
+---
+
+<section class="featured-section" aria-labelledby="featured-title">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Selected recognition</p>
+      <h2 id="featured-title">Featured In</h2>
+    </div>
+    <p class="section-note">My work has been featured, published, and recognized across leading publications and platforms.</p>
+  </div>
+  <div class="logo-grid">
+    {featuredPublications.map((publication, index) => (
+      <a class="logo-link" href={publication.href} target="_blank" rel="noopener noreferrer" style={`--delay: ${index * 45}ms`} aria-label={`Visit ${publication.name}`}>
+        {publication.image ? (
+          <img
+            class={publication.continuous ? 'publication-image publication-image--continuous' : 'publication-image'}
+            src={publication.image}
+            alt={publication.name}
+            style={{ backgroundColor: publication.background ?? '#f4f3f0' }}
+          />
+        ) : (
+          <span class="logo-mark" aria-hidden="true">{publication.mark}</span>
+        )}
+        <span class="logo-name">{publication.name}<br /><small>{publication.description}<br />{publication.audience}</small></span>
+      </a>
+    ))}
+  </div>
+  <div class="featured-bottom">
+    <p class="reach-line">Combined audience reach: <strong>{featuredStats.combinedReach}</strong> readers</p>
+    <div class="summary-card">
+      <div><span>Publications Featured In</span><strong>{featuredStats.publicationsFeatured}</strong></div>
+      <div><span>Total Audience Reach</span><strong>{featuredStats.combinedReach}</strong></div>
+      <div><span>Articles Published</span><strong>{featuredStats.articlesPublished}</strong></div>
+      <div><span>Top Publication</span><strong>{featuredStats.topPublication}</strong></div>
+    </div>
+  </div>
+  <a class="recognition-link" href="/featured/">View Recognition <span aria-hidden="true">→</span></a>
+</section>
+
+<style>
+  .featured-section { padding: 0 0 126px; }
+  .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 32px; margin-bottom: 38px; }
+  .eyebrow { margin: 0 0 16px; color: #70736d; font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  h2 { margin: 0; font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(2.2rem, 4vw, 3.7rem); font-weight: 400; line-height: 1; }
+  .section-note { max-width: 310px; margin: 0; color: #70736d; font-size: 0.86rem; line-height: 1.2; text-align: right; }
+  .logo-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid #bfc2b9; border-left: 1px solid #bfc2b9; }
+  .logo-link { display: flex; min-height: 132px; align-items: center; gap: 14px; padding: 24px; border-right: 1px solid #bfc2b9; border-bottom: 1px solid #bfc2b9; color: #20231f; text-decoration: none; filter: none; opacity: 1; transition: opacity 180ms ease, background 180ms ease, transform 180ms ease; animation: appear 500ms both; animation-delay: var(--delay); }
+  .logo-link:hover { background: #ebeae4; transform: translateY(-3px); }
+  .logo-mark { display: grid; width: 42px; height: 42px; flex: 0 0 42px; place-items: center; border: 1px solid #20231f; border-radius: 50%; font-size: 0.82rem; font-weight: 700; letter-spacing: -0.04em; }
+  .publication-image { display: block; width: 72px; height: 72px; object-fit: contain; flex: 0 0 auto; border-radius: 12px; background: #f4f3f0; overflow: hidden; }
+  .publication-image--continuous { object-fit: cover; object-position: center; width: 72px; height: 72px; border-radius: 12px; background: #24aade; transform: scale(1.06); }
+  .logo-name { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.25rem; }
+  .logo-name small { font-family: 'DM Sans', sans-serif; font-size: 0.68rem; line-height: 1.1; }
+  .featured-bottom { display: grid; grid-template-columns: 1fr 2fr; gap: 32px; align-items: start; margin-top: 28px; }
+  .reach-line { margin: 0; color: #70736d; font-size: 0.82rem; line-height: 1.5; }
+  .reach-line strong { color: #52705d; font-family: 'DM Serif Display', Georgia, serif; font-size: 1.35rem; font-weight: 400; }
+  .summary-card { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 20px; border: 1px solid #d1d3cc; border-radius: 14px; background: rgba(255,255,255,.34); }
+  .summary-card div { display: grid; gap: 8px; }
+  .summary-card span { color: #70736d; font-size: .64rem; letter-spacing: .06em; line-height: 1.35; text-transform: uppercase; }
+  .summary-card strong { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.45rem; font-weight: 400; }
+  .recognition-link { display: inline-flex; gap: 8px; align-items: center; margin-top: 28px; color: #20231f; font-size: .85rem; font-weight: 700; text-decoration: none; border-bottom: 1px solid #20231f; padding-bottom: 4px; transition: color 180ms ease, gap 180ms ease; }
+  .recognition-link:hover { color: #52705d; gap: 12px; }
+  @keyframes appear { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 850px) { .featured-bottom { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .featured-section { padding-bottom: 88px; } .section-heading { display: block; } .section-note { margin-top: 14px; text-align: left; } .logo-grid { grid-template-columns: repeat(2, 1fr); } .logo-link { min-height: 112px; padding: 16px; } .logo-name { font-size: 1.05rem; } .summary-card { grid-template-columns: repeat(2, 1fr); } }
+</style>

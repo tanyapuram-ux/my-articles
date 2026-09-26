@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Tart logo">
+  <rect width="240" height="240" fill="#7d102b"/>
+  <path d="M178 32c13 15 20 28 22 48-11-8-21-12-31-12-10 0-21 3-31 12-16-12-35-17-56-12 10 13 18 25 24 40 13 35 8 71-12 104 15 4 31 7 48 7 44 0 81-19 107-51-24-23-43-53-57-96z" fill="#f7efe4" opacity="0.9"/>
+  <text x="120" y="155" text-anchor="middle" fill="#f7efe4" font-family="Georgia, 'Times New Roman', serif" font-size="106" font-weight="700">Tart</text>
+</svg>
