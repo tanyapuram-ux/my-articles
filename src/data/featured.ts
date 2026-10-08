@@ -20,8 +20,8 @@ export const mediaMentions = [
 ] as const;
 
 export const featuredStats = {
-  combinedReach: '1.5M+',
+  combinedReach: '577k',
   publicationsFeatured: 8,
-  articlesPublished: 14,
+  articlesPublished: 15,
   topPublication: 'The Startup',
 };

@@ -9,7 +9,9 @@ const articles = defineCollection({
     date: z.coerce.date(),
     category: z.enum(['Entrepreneurship & Business', 'Founder Interviews', 'Tech & AI']),
     url: z.string().url(),
-    coverImage: z.string().url().optional(),
+    coverImage: z.string().refine((value) => value.startsWith('/') || /^https?:\/\//.test(value), {
+      message: 'Expected a root-relative path or absolute URL',
+    }).optional(),
     featured: z.boolean().optional(),
     reads: z.number().int().nonnegative().optional(),
     claps: z.number().int().nonnegative().optional(),

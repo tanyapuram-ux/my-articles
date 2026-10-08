@@ -19,13 +19,13 @@ const overview = overviewStats.slice(0, 3).concat(overviewStats.slice(4, 5));
         <a class="site-name" href="/">Home</a><a href="/analytics/">Analytics</a><a href="/featured/">Featured In</a><a href="https://medium.com/@tanya.puram" target="_blank" rel="noopener noreferrer">Medium Blog</a>
       </nav>
       <nav class="nav-group nav-right" aria-label="Secondary navigation">
-        <a href="/articles/entrepreneurship/">Entrepreneurship &amp; Business</a><a href="/articles/founder-interviews/">Founder Interviews</a><a href="/articles/tech-ai/">Tech &amp; AI</a>
+        <a href="/articles/founder-interviews/">Founder Interviews</a><a href="/articles/entrepreneurship/">Entrepreneurship &amp; Business</a><a href="/articles/tech-ai/">Tech &amp; AI</a>
       </nav>
     </header>
 
     <main>
       <a class="return-link" href="/">← Back home</a>
-      <section class="analytics-hero"><p class="eyebrow">The readership report / 2026</p><h1>Medium Performance<br /><em>Analytics.</em></h1><p class="hero-copy">A considered view of how ideas travel: the people who find them, stay with them, and carry them forward.</p></section>
+      <section class="analytics-hero"><p class="eyebrow">The readership report / 2025</p><h1>Medium Performance<br /><em>Analytics.</em></h1><p class="hero-copy">A considered view of how ideas travel: the people who find them, stay with them, and carry them forward.</p></section>
 
       <section class="overview-section" aria-labelledby="overview-title"><div class="section-heading"><div><h2 id="overview-title">Overview</h2></div><span class="period">Last 12 months&nbsp; ↗</span></div><div class="overview-grid">{overview.map((stat) => <article class="overview-card"><span class="stat-icon">{icon(stat.icon)}</span><strong class="count" data-count={stat.value} data-display={stat.display}>0</strong><span class="stat-label">{stat.label}</span><span class="trend">{stat.trend}</span></article>)}</div></section>
 
