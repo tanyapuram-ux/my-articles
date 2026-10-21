@@ -1,9 +1,9 @@
 export const overviewStats = [
-  { label: 'Total Views', value: 284600, display: '284.6k', icon: 'eye', trend: '+18.4%' },
-  { label: 'Total Reads', value: 119800, display: '119.8k', icon: 'book', trend: '+12.7%' },
+  { label: 'Total Views', value: 42400, display: '42.4k', icon: 'eye', trend: '+18.4%' },
+  { label: 'Total Reads', value: 34600, display: '34.6k', icon: 'book', trend: '+12.7%' },
   { label: 'Total Claps', value: 18400, display: '18.4k', icon: 'clap', trend: '+9.2%' },
   { label: 'Read Ratio', value: 42.1, display: '42.1%', icon: 'ratio', trend: '+3.8%' },
-  { label: 'Followers', value: 2840, display: '2.84k', icon: 'people', trend: '+14.1%' },
+  { label: 'Followers across publications', value: 576800, display: '576.8k', icon: 'people', trend: '+14.1%' },
   { label: 'Subscribers', value: 1260, display: '1.26k', icon: 'mail', trend: '+11.6%' },
   { label: 'Articles Published', value: 24, display: '24', icon: 'pen', trend: '+4 this year' },
   { label: 'Presentations', value: 8, display: '8', icon: 'screen', trend: '+2 this year' },
