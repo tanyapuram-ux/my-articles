@@ -21,7 +21,7 @@ export const mediaMentions = [
 
 export const featuredStats = {
   combinedReach: '577k',
-  publicationsFeatured: 8,
+  publicationsFeatured: 6,
   articlesPublished: 15,
   topPublication: 'The Startup',
 };
