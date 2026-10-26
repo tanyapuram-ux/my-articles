@@ -38,6 +38,13 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
+## Deploying to Cloudflare Workers
+
+Configure Cloudflare Workers Builds with `npm run build` as the build command
+and `npx wrangler deploy --config wrangler.jsonc` as the deploy command. The
+Wrangler config points to Astro's generated static assets and avoids Wrangler's
+interactive first-run project setup in CI.
+
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
